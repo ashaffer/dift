@@ -52,7 +52,7 @@ function dift (prev, next, effect, key = defaultKey) {
 
   // Fast-path at this particular point because the "no change" case that this covers
   // is orders magnitude more common than the others
-  if (nStartIdx === nextLen) {
+  if (nStartIdx === nextLen && pStartIdx === prevLen) {
     return
   }
 
