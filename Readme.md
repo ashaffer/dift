@@ -5,6 +5,8 @@
 
 Super fast list diff algorithm.  Highly optimized for operations common in virtual DOM based UI systems, specifically: prepend, append, reverse, remove all, create all.  However, it performs very well in the worst case (random rearrangement) as well.
 
+Without really researching it or benchmarking, i'm going to invoke [Cunningham's Law](https://meta.wikimedia.org/wiki/Cunningham%27s_Law) and say that it is the fastest key-based list diff algorithm in existence for this particular application.
+
 ## Installation
 
     $ npm install dift
