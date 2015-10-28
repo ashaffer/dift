@@ -50,6 +50,12 @@ function dift (prev, next, effect, key = defaultKey) {
     nStartItem = next[++nStartIdx]
   }
 
+  // Fast-path at this particular point because the "no change" case that this covers
+  // is orders magnitude more common than the others
+  if (nStartIdx === nextLen) {
+    return
+  }
+
   // List tail is the same
   while (pEndIdx >= pStartIdx && nEndIdx >= nStartIdx && equal(pEndItem, nEndItem)) {
     effect(UPDATE, pEndItem, nEndItem)
