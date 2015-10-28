@@ -1,5 +1,5 @@
 {
-  "name": "@ashaffer/dift",
+  "name": "dift",
   "description": "Super fast list diff algorithm",
   "repository": "git://github.com/ashaffer/dift.git",
   "version": "0.1.0",

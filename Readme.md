@@ -3,11 +3,20 @@
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
-Super fast list diff algorithm
+Super fast list diff algorithm.  Highly optimized for operations common in virtual DOM based UI systems, specifically: prepend, append, reverse, remove all, create all.  However, it performs very well in the worst case (random rearrangement) as well.
 
 ## Installation
 
-    $ npm install @ashaffer/dift
+    $ npm install dift
+
+## Usage
+
+Params:
+
+   * `prev` - The old list
+   * `next` - The new list
+   * `effect` - A function that receives operations.  You can execute your operations in here, or aggregate them into some buffer to be executed elsewhere, that is up to you.
+   * `key` - Return a value used to compare two list items to determine whether they are equal.
 
 ## License
 
