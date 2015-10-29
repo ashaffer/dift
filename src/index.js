@@ -92,11 +92,10 @@ function dift (prev, next, effect, key = defaultKey) {
   }
 
   // If there are no creations, then you have to
-  // remove exactly prevLen - nextLen elements in this
-  // diff.  You have to remove one more for each element
-  // that was created.  This means once we have
+  // remove exactly max(prevLen - nextLen, 0) elements in this
+  // diff. You have to remove one more for each element
+  // that was created. This means once we have
   // removed that many, we can stop.
-
   const necessaryRemovals = (prevLen - nextLen) + created
   for (let removals = 0; removals < necessaryRemovals; pStartItem = prev[++pStartIdx]) {
     if (isUndefined(keep[pStartIdx])) {
