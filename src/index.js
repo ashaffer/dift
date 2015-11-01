@@ -76,7 +76,7 @@ function dift (prev, next, effect, key = defaultKey) {
     nStartItem = next[++nStartIdx]
   }
 
-  const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1)
+  const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1, key)
   const keep = {}
 
   for(; nStartIdx <= nEndIdx; nStartItem = next[++nStartIdx]) {
@@ -117,11 +117,11 @@ function isUndefined (val) {
   return typeof val === 'undefined'
 }
 
-function keyMap (items, start, end) {
+function keyMap (items, start, end, key) {
   const map = {}
 
   for (let i = start; i < end; ++i) {
-    map[items[i].key] = i
+    map[key(items[i])] = i
   }
 
   return map
