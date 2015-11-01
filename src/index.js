@@ -18,14 +18,14 @@ function dift (prev, next, effect, key = defaultKey) {
   if (prevLen === 0) {
     if (nextLen === 0) return
     else {
-      // All removes
+      // All creates
       for (let i = 0; i < nextLen; i++) {
         effect(CREATE, null, next[i], i)
       }
       return
     }
   } else if (nextLen === 0) {
-    // All creates
+    // All removes
     for (let i = 0; i < prevLen; i++) {
       effect(REMOVE, prev[i], null, i)
     }
