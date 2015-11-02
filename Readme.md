@@ -20,6 +20,38 @@ Params:
    * `effect` - A function that receives operations.  You can execute your operations in here, or aggregate them into some buffer to be executed elsewhere, that is up to you.
    * `key` - Return a value used to compare two list items to determine whether they are equal.
 
+### Effects
+
+  * `CREATE` - Receives `(type = CREATE, prev = null, next = newItem, pos = positionToCreate)`
+  * `UPDATE` - Receives `(type = UPDATE, prev = oldItem, next = newItem)`
+  * `MOVE` - Receives `(type = MOVE, prev = oldItem, next = newItem, pos = newPosition)`
+  * `REMOVE` - Receives `(type = REMOVE, prev = oldItem)`
+
+## Example
+
+```javascript
+import diff, {CREATE, UPDATE, MOVE, REMOVE} from 'dift'
+
+function diffChildren (prevList, nextList, node) {
+  diff(prevList, nextList, function (type, prev, next, pos) {
+    switch (type) {
+      case CREATE:
+        node.insertBefore(create(next), node.childNodes[pos] || null))
+        break
+      case UPDATE:
+        update(prev, next, prev.element)
+        break
+      case MOVE:
+        node.insertBefore(update(prev, next), prev.element)
+        break
+      case REMOVE:
+        node.removeChild(prev.element)
+        break
+    }
+  })
+}
+```
+
 ## License
 
 The MIT License
