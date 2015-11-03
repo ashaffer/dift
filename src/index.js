@@ -50,10 +50,24 @@ function dift (prev, next, effect, key = defaultKey) {
     nStartItem = next[++nStartIdx]
   }
 
-  // Fast-path at this particular point because the "no change" case that this covers
-  // is orders magnitude more common than the others
+  // Reversed
+  while (pStartIdx <= pEndIdx && nEndIdx >= nStartIdx && equal(pStartItem, nEndItem)) {
+    effect(MOVE, pStartItem, nEndItem, nEndIdx)
+    pStartItem = prev[++pStartIdx]
+    nEndItem = next[--nEndIdx]
+  }
+
+  // The above two cases each could have processed the entire list (whereas the next two
+  // cannot if these didn't).  So bail out early here if we can.
   if (nStartIdx === nextLen && pStartIdx === prevLen) {
     return
+  }
+
+  // Reversed the other way (in case of e.g. reverse and append)
+  while (pEndIdx >= pStartIdx && nStartIdx <= nEndIdx && equal(nStartItem, pEndItem)) {
+    effect(MOVE, pEndItem, nStartItem, nStartIdx)
+    pEndItem = prev[--pEndIdx]
+    nStartItem = next[++nStartIdx]
   }
 
   // List tail is the same
@@ -61,19 +75,6 @@ function dift (prev, next, effect, key = defaultKey) {
     effect(UPDATE, pEndItem, nEndItem)
     pEndItem = prev[--pEndIdx]
     nEndItem = next[--nEndIdx]
-  }
-
-  // Reversals
-  while (pStartIdx <= pEndIdx && nEndIdx >= nStartIdx && equal(pStartItem, nEndItem)) {
-    effect(MOVE, pStartItem, nEndItem, nEndIdx)
-    pStartItem = prev[++pStartIdx]
-    nEndItem = next[--nEndIdx]
-  }
-
-  while (pEndIdx >= pStartIdx && nStartIdx <= nEndIdx && equal(nStartItem, pEndItem)) {
-    effect(MOVE, pEndItem, nStartItem, nStartIdx)
-    pEndItem = prev[--pEndIdx]
-    nStartItem = next[++nStartIdx]
   }
 
   const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1)
