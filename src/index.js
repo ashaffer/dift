@@ -18,14 +18,14 @@ function dift (prev, next, effect, key = defaultKey) {
   if (prevLen === 0) {
     if (nextLen === 0) return
     else {
-      // All removes
+      // All creates
       for (let i = 0; i < nextLen; i++) {
         effect(CREATE, null, next[i], i)
       }
       return
     }
   } else if (nextLen === 0) {
-    // All creates
+    // All removes
     for (let i = 0; i < prevLen; i++) {
       effect(REMOVE, prev[i], null, i)
     }
@@ -77,7 +77,7 @@ function dift (prev, next, effect, key = defaultKey) {
     nEndItem = next[--nEndIdx]
   }
 
-  const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1)
+  const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1, key)
   const keep = {}
 
   for(; nStartIdx <= nEndIdx; nStartItem = next[++nStartIdx]) {
@@ -93,11 +93,10 @@ function dift (prev, next, effect, key = defaultKey) {
   }
 
   // If there are no creations, then you have to
-  // remove exactly prevLen - nextLen elements in this
-  // diff.  You have to remove one more for each element
-  // that was created.  This means once we have
+  // remove exactly max(prevLen - nextLen, 0) elements in this
+  // diff. You have to remove one more for each element
+  // that was created. This means once we have
   // removed that many, we can stop.
-
   const necessaryRemovals = (prevLen - nextLen) + created
   for (let removals = 0; removals < necessaryRemovals; pStartItem = prev[++pStartIdx]) {
     if (isUndefined(keep[pStartIdx])) {
@@ -119,11 +118,11 @@ function isUndefined (val) {
   return typeof val === 'undefined'
 }
 
-function keyMap (items, start, end) {
+function keyMap (items, start, end, key) {
   const map = {}
 
   for (let i = start; i < end; ++i) {
-    map[items[i].key] = i
+    map[key(items[i])] = i
   }
 
   return map
