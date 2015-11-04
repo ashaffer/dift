@@ -11,7 +11,7 @@ import diff, {CREATE, UPDATE, MOVE, REMOVE} from '../src'
  * Taken from: https://github.com/joshrtay/key-diff
  */
 
-test('add', (t) => {
+test('add', t => {
   let a = []
   let b = [{key: 'foo', val: 'bar'}]
   let c = clone(a)
@@ -24,7 +24,7 @@ test('add', (t) => {
   t.end()
 })
 
-test('add many', (t) => {
+test('add many', t => {
   let a = []
   let b = [{key: 'foo', val: 'bar'}, {key: 'bat', val: 'box'}]
   let c = clone(a)
@@ -37,7 +37,7 @@ test('add many', (t) => {
   t.end()
 })
 
-test('add before/after', (t) => {
+test('add before/after', t => {
   let a = [{key: 'bar', val: 'two'}]
   let b = [
     {key: 'foo', val: 'one'},
@@ -54,7 +54,7 @@ test('add before/after', (t) => {
   t.end()
 })
 
-test('add middle', (t) => {
+test('add middle', t => {
   let a = [{key: 'foo', val: 'one'}, {key: 'baz', val: 'four'}]
   let b = [
     {key: 'foo', val: 'one'},
@@ -71,7 +71,7 @@ test('add middle', (t) => {
   t.end()
 })
 
-test('remove', (t) => {
+test('remove', t => {
   let a = [{key: 'foo', val: 'bar'}]
   let b = []
   let c = clone(a)
@@ -84,7 +84,7 @@ test('remove', (t) => {
   t.end()
 })
 
-test('remove many', (t) => {
+test('remove many', t => {
   let a = [{key: 'foo', val: 'bar'}, {key: 'bat', val: 'box'}]
   let b = []
   let c = clone(a)
@@ -97,7 +97,7 @@ test('remove many', (t) => {
   t.end()
 })
 
-test('remove one', (t) => {
+test('remove one', t => {
   let a = [{key: 'bar', val: 'two'}, {key: 'foo', val: 'one'}]
   let b = [{key: 'bar', val: 'two'}]
   let c = clone(a)
@@ -110,7 +110,7 @@ test('remove one', (t) => {
   t.end()
 })
 
-test('remove complex', (t) => {
+test('remove complex', t => {
   let a = [{key: 'bar', val: 'one'}, {key: 'foo', val: 'two'}, {key: 'bat', val: 'three'}, {key: 'baz', val: 'four'}, {key: 'quz', val: 'five'}]
   let b = [{key: 'foo', val: 'two'}, {key: 'baz', val: 'four'}]
   let c = clone(a)
@@ -124,7 +124,7 @@ test('remove complex', (t) => {
 })
 
 
-test('update', (t) => {
+test('update', t => {
   let a = [{key: 'foo', val: 'bar'}]
   let b = [{key: 'foo', val: 'box'}]
   let c = clone(a)
@@ -137,7 +137,7 @@ test('update', (t) => {
   t.end()
 })
 
-test('update/remove', (t) => {
+test('update/remove', t => {
   let a = [
     {key: 'foo', val: 'one'},
     {key: 'bar', val: 'two'},
@@ -154,7 +154,7 @@ test('update/remove', (t) => {
   t.end()
 })
 
-test('update/remove 2', (t) => {
+test('update/remove 2', t => {
   let a = [
     {key: 'foo', val: 'one'},
     {key: 'bar', val: 'five'},
@@ -171,7 +171,7 @@ test('update/remove 2', (t) => {
   t.end()
 })
 
-test('update/remove 3', (t) => {
+test('update/remove 3', t => {
   let a = [
     {key: 'bar', val: 'span'},
     {key: 'foo', val: 'one'}
@@ -187,7 +187,7 @@ test('update/remove 3', (t) => {
   t.end()
 })
 
-test('swap', (t) => {
+test('swap', t => {
   let a = [{key: 'foo', val: 'bar'}, {key: 'bat', val: 'box'}]
   let b = [{key: 'bat', val: 'box'}, {key: 'foo', val: 'bar'}]
   let c = clone(a)
@@ -200,7 +200,7 @@ test('swap', (t) => {
   t.end()
 })
 
-test('reverse', (t) => {
+test('reverse', t => {
   let a = [{key: 'foo', val: 'one'}, {key: 'bat', val: 'two'}, {key: 'baz', val: 'three'}, {key: 'qux', val: 'four'}]
   let b = [{key: 'qux', val: 'four'}, {key: 'baz', val: 'three'}, {key: 'bat', val: 'two'}, {key: 'foo', val: 'one'}]
   let c = clone(a)
@@ -219,7 +219,7 @@ test('reverse', (t) => {
   t.end()
 })
 
-test('complex', (t) => {
+test('complex', t => {
   let a = [{key: 'foo', val: 'one'}, {key: 'bar', val: 'two'}, {key: 'baz', val: 'three'}]
   let b = [{key: 'bar', val: 'two'}, {key: 'foo', val: 'one'},  {key: 'bat', val: 'four'}]
   let c = clone(a)

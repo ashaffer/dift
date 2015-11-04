@@ -16,6 +16,9 @@ node_modules: package.json
 test: node_modules
 	${BIN}/babel-tape-runner test/*.js
 
+benchmark: node_modules
+	${BIN}/babel-tape-runner test/benchmark.js
+
 validate: node_modules
 	@${BIN}/standard
 

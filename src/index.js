@@ -1,4 +1,10 @@
 /**
+ * Imports
+ */
+
+import {createBv, setBit, getBit} from 'bit-vector'
+
+/**
  * Actions
  */
 
@@ -51,7 +57,7 @@ function dift (prev, next, effect, key = defaultKey) {
   }
 
   // Reversed
-  while (pStartIdx <= pEndIdx && nEndIdx >= nStartIdx && equal(pStartItem, nEndItem)) {
+  while (pStartIdx <= pEndIdx && nStartIdx <= nEndIdx && equal(pStartItem, nEndItem)) {
     effect(MOVE, pStartItem, nEndItem, nEndIdx)
     pStartItem = prev[++pStartIdx]
     nEndItem = next[--nEndIdx]
@@ -78,16 +84,17 @@ function dift (prev, next, effect, key = defaultKey) {
   }
 
   const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1, key)
-  const keep = {}
+  const keepBase = pStartIdx
+  const keep = createBv(pEndIdx - pStartIdx)
 
   for(; nStartIdx <= nEndIdx; nStartItem = next[++nStartIdx]) {
-    const oldIdx = prevMap[nStartItem.key]
+    const oldIdx = prevMap[key(nStartItem)]
 
     if (isUndefined(oldIdx)) {
       effect(CREATE, null, nStartItem, nStartIdx)
       ++created
     } else {
-      keep[oldIdx] = true
+      setBit(keep, oldIdx - keepBase)
       effect(oldIdx === nStartIdx ? UPDATE : MOVE, prev[oldIdx], nStartItem, nStartIdx)
     }
   }
@@ -99,7 +106,7 @@ function dift (prev, next, effect, key = defaultKey) {
   // removed that many, we can stop.
   const necessaryRemovals = (prevLen - nextLen) + created
   for (let removals = 0; removals < necessaryRemovals; pStartItem = prev[++pStartIdx]) {
-    if (isUndefined(keep[pStartIdx])) {
+    if (!getBit(keep, pStartIdx - keepBase)) {
       effect(REMOVE, pStartItem)
       ++removals
     }
