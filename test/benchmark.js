@@ -21,6 +21,13 @@ test('benchmark reverse', t => {
   t.end()
 })
 
+test('benchmark insertFirst', t => {
+  const a = generate(100000)
+  const b = generate(1).concat(a)
+  trial(a, b)
+  t.end()
+})
+
 function trial (a, b) {
   const deltas = []
 

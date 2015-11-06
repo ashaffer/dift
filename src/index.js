@@ -51,7 +51,7 @@ function dift (prev, next, effect, key = defaultKey) {
 
   // List head is the same
   while (pStartIdx < prevLen && nStartIdx < nextLen && equal(pStartItem, nStartItem)) {
-    effect(UPDATE, pStartItem, nStartItem)
+    effect(UPDATE, pStartItem, nStartItem, nStartIdx)
     pStartItem = prev[++pStartIdx]
     nStartItem = next[++nStartIdx]
   }
@@ -78,9 +78,27 @@ function dift (prev, next, effect, key = defaultKey) {
 
   // List tail is the same
   while (pEndIdx >= pStartIdx && nEndIdx >= nStartIdx && equal(pEndItem, nEndItem)) {
-    effect(UPDATE, pEndItem, nEndItem)
+    effect(UPDATE, pEndItem, nEndItem, nEndIdx)
     pEndItem = prev[--pEndIdx]
     nEndItem = next[--nEndIdx]
+  }
+
+  if (pStartIdx > pEndIdx) {
+    while (nStartIdx <= nEndIdx) {
+      effect(CREATE, null, nStartItem, nStartIdx)
+      nStartItem = next[++nStartIdx]
+    }
+
+    return
+  }
+
+  if (nStartIdx > nEndIdx) {
+    while (pStartIdx <= pEndIdx) {
+      effect(REMOVE, pStartItem)
+      pStartItem = prev[++pStartIdx]
+    }
+
+    return
   }
 
   const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1, key)
