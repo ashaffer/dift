@@ -28,12 +28,16 @@ test('benchmark insertFirst', t => {
   t.end()
 })
 
+function key (a) {
+  return a.key
+}
+
 function trial (a, b) {
   const deltas = []
 
   for (let i = 0; i < 100; i++) {
     const t = +new Date()
-    diff(a, b, noop)
+    diff(a, b, noop, key)
     deltas.push((+new Date) - t)
   }
 

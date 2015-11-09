@@ -17,7 +17,7 @@ test('add', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -30,7 +30,7 @@ test('add many', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -47,7 +47,7 @@ test('add before/after', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -64,7 +64,7 @@ test('add middle', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -77,7 +77,7 @@ test('remove', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -90,7 +90,7 @@ test('remove many', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -103,7 +103,7 @@ test('remove one', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -116,7 +116,7 @@ test('remove complex', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -130,7 +130,7 @@ test('update', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -147,7 +147,7 @@ test('update/remove', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -164,7 +164,7 @@ test('update/remove 2', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -180,7 +180,7 @@ test('update/remove 3', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -193,7 +193,7 @@ test('swap', t => {
   let c = clone(a)
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
@@ -211,7 +211,7 @@ test('reverse', t => {
   diff(a, b, function (...args) {
     log.push(args[0])
     patch(...args)
-  })
+  }, key)
 
   t.deepEqual(log, [MOVE, MOVE, MOVE, MOVE])
   t.deepEqual(c, b)
@@ -226,14 +226,18 @@ test('complex', t => {
 
   let patch = update(c)
 
-  diff(a, b, patch)
+  diff(a, b, patch, key)
 
   t.deepEqual(c, b)
 
   t.end()
 })
 
-function update(list) {
+function key (a) {
+  return a.key
+}
+
+function update (list) {
   return function(type, prev, next, pos) {
     switch(type) {
       case CREATE:

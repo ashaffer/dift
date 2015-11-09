@@ -17,56 +17,34 @@ const REMOVE = 3
  * dift
  */
 
-function dift (prev, next, effect, key = defaultKey) {
-  const prevLen = prev.length
-  const nextLen = next.length
-
-  if (prevLen === 0) {
-    if (nextLen === 0) return
-    else {
-      // All creates
-      for (let i = 0; i < nextLen; i++) {
-        effect(CREATE, null, next[i], i)
-      }
-      return
-    }
-  } else if (nextLen === 0) {
-    // All removes
-    for (let i = 0; i < prevLen; i++) {
-      effect(REMOVE, prev[i], null, i)
-    }
-
-    return
-  }
-
+function dift (prev, next, effect, key) {
   let pStartIdx = 0
-  let pEndIdx = prevLen - 1
   let nStartIdx = 0
-  let nEndIdx = nextLen - 1
+  let pEndIdx = prev.length - 1
+  let nEndIdx = next.length - 1
   let pStartItem = prev[pStartIdx]
-  let pEndItem = prev[pEndIdx]
   let nStartItem = next[nStartIdx]
-  let nEndItem = next[nEndIdx]
-  let created = 0
 
   // List head is the same
-  while (pStartIdx < prevLen && nStartIdx < nextLen && equal(pStartItem, nStartItem)) {
+  while (pStartIdx <= pEndIdx && nStartIdx <= nEndIdx && equal(pStartItem, nStartItem)) {
     effect(UPDATE, pStartItem, nStartItem, nStartIdx)
     pStartItem = prev[++pStartIdx]
     nStartItem = next[++nStartIdx]
   }
+
+  // The above case is orders of magnitude more common than the others, so fast-path it
+  if (nStartIdx > nEndIdx && pStartIdx > pEndIdx) {
+    return
+  }
+
+  let pEndItem = prev[pEndIdx]
+  let nEndItem = next[nEndIdx]
 
   // Reversed
   while (pStartIdx <= pEndIdx && nStartIdx <= nEndIdx && equal(pStartItem, nEndItem)) {
     effect(MOVE, pStartItem, nEndItem, nEndIdx)
     pStartItem = prev[++pStartIdx]
     nEndItem = next[--nEndIdx]
-  }
-
-  // The above two cases each could have processed the entire list (whereas the next two
-  // cannot if these didn't).  So bail out early here if we can.
-  if (nStartIdx === nextLen && pStartIdx === prevLen) {
-    return
   }
 
   // Reversed the other way (in case of e.g. reverse and append)
@@ -101,19 +79,23 @@ function dift (prev, next, effect, key = defaultKey) {
     return
   }
 
-  const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1, key)
+  let created = 0
   const keepBase = pStartIdx
   const keep = createBv(pEndIdx - pStartIdx)
 
-  for(; nStartIdx <= nEndIdx; nStartItem = next[++nStartIdx]) {
-    const oldIdx = prevMap[key(nStartItem)]
+  if (nStartIdx <= nEndIdx) {
+    const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1, key)
 
-    if (isUndefined(oldIdx)) {
-      effect(CREATE, null, nStartItem, nStartIdx)
-      ++created
-    } else {
-      setBit(keep, oldIdx - keepBase)
-      effect(oldIdx === nStartIdx ? UPDATE : MOVE, prev[oldIdx], nStartItem, nStartIdx)
+    for(; nStartIdx <= nEndIdx; nStartItem = next[++nStartIdx]) {
+      const oldIdx = prevMap[key(nStartItem)]
+
+      if (isUndefined(oldIdx)) {
+        effect(CREATE, null, nStartItem, nStartIdx)
+        ++created
+      } else {
+        setBit(keep, oldIdx - keepBase)
+        effect(oldIdx === nStartIdx ? UPDATE : MOVE, prev[oldIdx], nStartItem, nStartIdx)
+      }
     }
   }
 
@@ -122,7 +104,7 @@ function dift (prev, next, effect, key = defaultKey) {
   // diff. You have to remove one more for each element
   // that was created. This means once we have
   // removed that many, we can stop.
-  const necessaryRemovals = (prevLen - nextLen) + created
+  const necessaryRemovals = (prev.length - next.length) + created
   for (let removals = 0; removals < necessaryRemovals; pStartItem = prev[++pStartIdx]) {
     if (!getBit(keep, pStartIdx - keepBase)) {
       effect(REMOVE, pStartItem)
@@ -133,10 +115,6 @@ function dift (prev, next, effect, key = defaultKey) {
   function equal (a, b) {
     return key(a) === key(b)
   }
-}
-
-function defaultKey (a) {
-  return a.key
 }
 
 function isUndefined (val) {
