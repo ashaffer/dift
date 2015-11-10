@@ -14,201 +14,116 @@ import permutations from 'array-permutation'
  */
 
 test('add', t => {
-  let a = []
-  let b = [{key: 'foo', val: 'bar'}]
-  let c = clone(a)
-  let patch = update(c)
+  const a = []
+  const b = [{key: 'foo', val: 'bar'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('add many', t => {
-  let a = []
-  let b = [{key: 'foo', val: 'bar'}, {key: 'bat', val: 'box'}]
-  let c = clone(a)
-  let patch = update(c)
+  const a = []
+  const b = [{key: 'foo', val: 'bar'}, {key: 'bat', val: 'box'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('add before/after', t => {
-  let a = [{key: 'bar', val: 'two'}]
-  let b = [
-    {key: 'foo', val: 'one'},
-    {key: 'bar', val: 'two'},
-    {key: 'baz', val: 'three'}
-  ]
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'bar', val: 'two'}]
+  const b = [{key: 'foo', val: 'one'}, {key: 'bar', val: 'two'}, {key: 'baz', val: 'three'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('add middle', t => {
-  let a = [{key: 'foo', val: 'one'}, {key: 'baz', val: 'four'}]
-  let b = [
-    {key: 'foo', val: 'one'},
-    {key: 'bar', val: 'five'},
-    {key: 'baz', val: 'four'}
-  ]
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'foo', val: 'one'}, {key: 'baz', val: 'four'}]
+  const b = [{key: 'foo', val: 'one'}, {key: 'bar', val: 'five'}, {key: 'baz', val: 'four'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('remove', t => {
-  let a = [{key: 'foo', val: 'bar'}]
-  let b = []
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'foo', val: 'bar'}]
+  const b = []
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('remove many', t => {
-  let a = [{key: 'foo', val: 'bar'}, {key: 'bat', val: 'box'}]
-  let b = []
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'foo', val: 'bar'}, {key: 'bat', val: 'box'}]
+  const b = []
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('remove one', t => {
-  let a = [{key: 'bar', val: 'two'}, {key: 'foo', val: 'one'}]
-  let b = [{key: 'bar', val: 'two'}]
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'bar', val: 'two'}, {key: 'foo', val: 'one'}]
+  const b = [{key: 'bar', val: 'two'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('remove complex', t => {
-  let a = [{key: 'bar', val: 'one'}, {key: 'foo', val: 'two'}, {key: 'bat', val: 'three'}, {key: 'baz', val: 'four'}, {key: 'quz', val: 'five'}]
-  let b = [{key: 'foo', val: 'two'}, {key: 'baz', val: 'four'}]
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'bar', val: 'one'}, {key: 'foo', val: 'two'}, {key: 'bat', val: 'three'}, {key: 'baz', val: 'four'}, {key: 'quz', val: 'five'}]
+  const b = [{key: 'foo', val: 'two'}, {key: 'baz', val: 'four'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 
 test('update', t => {
-  let a = [{key: 'foo', val: 'bar'}]
-  let b = [{key: 'foo', val: 'box'}]
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'foo', val: 'bar'}]
+  const b = [{key: 'foo', val: 'box'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('update/remove', t => {
-  let a = [
-    {key: 'foo', val: 'one'},
-    {key: 'bar', val: 'two'},
-    {key: 'baz', val: 'three'}
-  ]
-  let b = [{key: 'foo', val: 'one'}, {key: 'baz', val: 'four'}]
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'foo', val: 'one'}, {key: 'bar', val: 'two'}, {key: 'baz', val: 'three'}]
+  const b = [{key: 'foo', val: 'one'}, {key: 'baz', val: 'four'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('update/remove 2', t => {
-  let a = [
-    {key: 'foo', val: 'one'},
-    {key: 'bar', val: 'five'},
-    {key: 'baz', val: 'four'}
-  ]
-  let b = [{key: 'foo', val: 'one'}, {key: 'bar', val: 'span'}]
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'foo', val: 'one'}, {key: 'bar', val: 'five'}, {key: 'baz', val: 'four'}]
+  const b = [{key: 'foo', val: 'one'}, {key: 'bar', val: 'span'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('update/remove 3', t => {
-  let a = [
-    {key: 'bar', val: 'span'},
-    {key: 'foo', val: 'one'}
-  ]
-  let b = [{key: 'foo', val: 'span'}]
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'bar', val: 'span'}, {key: 'foo', val: 'one'}]
+  const b = [{key: 'foo', val: 'span'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('swap', t => {
-  let a = [{key: 'foo', val: 'bar'}, {key: 'bat', val: 'box'}]
-  let b = [{key: 'bat', val: 'box'}, {key: 'foo', val: 'bar'}]
-  let c = clone(a)
-  let patch = update(c)
+  const a = [{key: 'foo', val: 'bar'}, {key: 'bat', val: 'box'}]
+  const b = [{key: 'bat', val: 'box'}, {key: 'foo', val: 'bar'}]
 
-  diff(a, b, patch, key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('reverse', t => {
-  let a = [{key: 'foo', val: 'one'}, {key: 'bat', val: 'two'}, {key: 'baz', val: 'three'}, {key: 'qux', val: 'four'}]
-  let b = [{key: 'qux', val: 'four'}, {key: 'baz', val: 'three'}, {key: 'bat', val: 'two'}, {key: 'foo', val: 'one'}]
-  let c = clone(a)
-  let patch = update(c)
-
-  let log = []
+  const a = [{key: 'foo', val: 'one'}, {key: 'bat', val: 'two'}, {key: 'baz', val: 'three'}, {key: 'qux', val: 'four'}]
+  const b = [{key: 'qux', val: 'four'}, {key: 'baz', val: 'three'}, {key: 'bat', val: 'two'}, {key: 'foo', val: 'one'}]
+  const c = clone(a)
+  const patch = update(c)
+  const log = []
 
   diff(a, b, function (...args) {
     log.push(args[0])
@@ -222,14 +137,10 @@ test('reverse', t => {
 })
 
 test('complex', t => {
-  let a = [{key: 'foo', val: 'one'}, {key: 'bar', val: 'two'}, {key: 'baz', val: 'three'}]
-  let b = [{key: 'bar', val: 'two'}, {key: 'foo', val: 'one'},  {key: 'bat', val: 'four'}]
-  let c = clone(a)
+  const a = [{key: 'foo', val: 'one'}, {key: 'bar', val: 'two'}, {key: 'baz', val: 'three'}]
+  const b = [{key: 'bar', val: 'two'}, {key: 'foo', val: 'one'},  {key: 'bat', val: 'four'}]
 
-  diff(a, b, update(c), key)
-
-  t.deepEqual(c, b)
-
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
@@ -237,12 +148,10 @@ test('insert (3), rearrange', t => {
   for (let i = 0; i < 1000; i++) {
     const a = range(0, 10)
     const b = randomize(range(0, 10).concat(range(11, 14)))
-    const c = clone(a)
 
-    diff(a, b, update(c), key)
-
-    t.deepEqual(c, b)
+    t.deepEqual(b, run(a, b))
   }
+
   t.end()
 })
 
@@ -250,11 +159,8 @@ test('remove (3), rearrange', t => {
   for (let i = 0; i < 1000; i++) {
     const a = range(0, 13)
     const b = randomize(range(0, 10))
-    const c = clone(a)
 
-    diff(a, b, update(c), key)
-
-    t.deepEqual(c, b)
+    t.deepEqual(b, run(a, b))
   }
   t.end()
 })
@@ -263,11 +169,8 @@ test('remove (3), insert (3), rearrange', t => {
   for (let i = 0; i < 1000; i++) {
     const a = range(0, 13)
     const b = randomize(range(0, 10).concat(14, 17))
-    const c = clone(a)
 
-    diff(a, b, update(c), key)
-
-    t.deepEqual(c, b)
+    t.deepEqual(b, run(a, b))
   }
   t.end()
 })
@@ -275,22 +178,16 @@ test('remove (3), insert (3), rearrange', t => {
 test('empty initial', t => {
   const a = []
   const b = range(0, 10)
-  const c = clone(a)
 
-  diff(a, b, update(c), key)
-
-  t.deepEqual(c, b)
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
 test('reversed sides, middle rearranged', t => {
   const a = range(0, 10)
-  const b = [{key: 13}, {key: 3}, {key: 2}, {key: 9}, {key: 5}, {key: 8}, {key: 7}, {key: 12}, {key: 11}, {key: 6}, {key: 4}, {key: 1}, {key: 0}]
-  const c = clone(a)
+  const b = [13, 3, 2, 9, 5, 8, 7, 12, 11, 6, 4, 1, 0].map(i => ({key: i}))
 
-  diff(a, b, update(c), key)
-
-  t.deepEqual(c, b)
+  t.deepEqual(b, run(a, b))
   t.end()
 })
 
@@ -299,11 +196,8 @@ test('exhaustive - same items', t => {
   const ps = powerset(range(0, 8))
 
   for (let i = 0; i < ps.length; i++) {
-    const iter = permutations(ps[i])
-    for (let b of iter) {
-      const c = clone(a)
-      diff(a, b, update(c), key)
-      t.deepEqual(c, b)
+    for (let b of permutations(ps[i])) {
+      t.deepEqual(b, run(a, b))
     }
   }
 
@@ -315,16 +209,29 @@ test('exhaustive - mixed items', t => {
   const ps = powerset(range(7, 15))
 
   for (let i = 0; i < ps.length; i++) {
-    const iter = permutations(ps[i])
-    for (let b of iter) {
-      const c = clone(a)
-      diff(a, b, update(c), key)
-      t.deepEqual(c, b)
+    for (let b of permutations(ps[i])) {
+      t.deepEqual(b, run(a, b))
     }
   }
 
   t.end()
 })
+
+test('exhaustive - permutations', t => {
+  const a = range(0, 8)
+
+  for (let b of permutations(range(0, 8))) {
+    t.deepEqual(b, run(a, b))
+  }
+
+  t.end()
+})
+
+function run (a, b) {
+  const c = a.slice()
+  diff(a, b, update(c), key)
+  return c
+}
 
 function key (a) {
   return a.key
