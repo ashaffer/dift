@@ -4,6 +4,8 @@
 
 import test from 'tape'
 import diff, {CREATE, UPDATE, MOVE, REMOVE} from '../src'
+import powerset from 'powerset'
+import permutations from 'array-permutation'
 
 /**
  * Tests
@@ -224,17 +226,130 @@ test('complex', t => {
   let b = [{key: 'bar', val: 'two'}, {key: 'foo', val: 'one'},  {key: 'bat', val: 'four'}]
   let c = clone(a)
 
-  let patch = update(c)
-
-  diff(a, b, patch, key)
+  diff(a, b, update(c), key)
 
   t.deepEqual(c, b)
 
   t.end()
 })
 
+test('insert (3), rearrange', t => {
+  for (let i = 0; i < 1000; i++) {
+    const a = range(0, 10)
+    const b = randomize(range(0, 10).concat(range(11, 14)))
+    const c = clone(a)
+
+    diff(a, b, update(c), key)
+
+    t.deepEqual(c, b)
+  }
+  t.end()
+})
+
+test('remove (3), rearrange', t => {
+  for (let i = 0; i < 1000; i++) {
+    const a = range(0, 13)
+    const b = randomize(range(0, 10))
+    const c = clone(a)
+
+    diff(a, b, update(c), key)
+
+    t.deepEqual(c, b)
+  }
+  t.end()
+})
+
+test('remove (3), insert (3), rearrange', t => {
+  for (let i = 0; i < 1000; i++) {
+    const a = range(0, 13)
+    const b = randomize(range(0, 10).concat(14, 17))
+    const c = clone(a)
+
+    diff(a, b, update(c), key)
+
+    t.deepEqual(c, b)
+  }
+  t.end()
+})
+
+test('empty initial', t => {
+  const a = []
+  const b = range(0, 10)
+  const c = clone(a)
+
+  diff(a, b, update(c), key)
+
+  t.deepEqual(c, b)
+  t.end()
+})
+
+test('reversed sides, middle rearranged', t => {
+  const a = range(0, 10)
+  const b = [{key: 13}, {key: 3}, {key: 2}, {key: 9}, {key: 5}, {key: 8}, {key: 7}, {key: 12}, {key: 11}, {key: 6}, {key: 4}, {key: 1}, {key: 0}]
+  const c = clone(a)
+
+  diff(a, b, update(c), key)
+
+  t.deepEqual(c, b)
+  t.end()
+})
+
+test('exhaustive - same items', t => {
+  const a = range(0, 10)
+  const ps = powerset(range(0, 8))
+
+  for (let i = 0; i < ps.length; i++) {
+    const iter = permutations(ps[i])
+    for (let b of iter) {
+      const c = clone(a)
+      diff(a, b, update(c), key)
+      t.deepEqual(c, b)
+    }
+  }
+
+  t.end()
+})
+
+test('exhaustive - mixed items', t => {
+  const a = range(0, 10)
+  const ps = powerset(range(7, 15))
+
+  for (let i = 0; i < ps.length; i++) {
+    const iter = permutations(ps[i])
+    for (let b of iter) {
+      const c = clone(a)
+      diff(a, b, update(c), key)
+      t.deepEqual(c, b)
+    }
+  }
+
+  t.end()
+})
+
 function key (a) {
   return a.key
+}
+
+function randomize (list) {
+  const newList = []
+
+  for (let i = 0, len = list.length; i < len; i++) {
+    const j = Math.floor(Math.random() * 100000) % list.length
+    newList.push(list[j])
+    list.splice(j, 1)
+  }
+
+  return newList
+}
+
+function range (begin, end) {
+  const r = []
+
+  for (let i = begin; i < end; i++) {
+    r.push({key: i})
+  }
+
+  return r
 }
 
 function update (list) {

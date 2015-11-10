@@ -39,12 +39,14 @@ function dift (prev, next, effect, key) {
 
   let pEndItem = prev[pEndIdx]
   let nEndItem = next[nEndIdx]
+  let movedFromFront = 0
 
   // Reversed
   while (pStartIdx <= pEndIdx && nStartIdx <= nEndIdx && equal(pStartItem, nEndItem)) {
-    effect(MOVE, pStartItem, nEndItem, nEndIdx)
+    effect(MOVE, pStartItem, nEndItem, pEndIdx - movedFromFront)
     pStartItem = prev[++pStartIdx]
     nEndItem = next[--nEndIdx]
+    ++movedFromFront
   }
 
   // Reversed the other way (in case of e.g. reverse and append)
@@ -52,6 +54,7 @@ function dift (prev, next, effect, key) {
     effect(MOVE, pEndItem, nStartItem, nStartIdx)
     pEndItem = prev[--pEndIdx]
     nStartItem = next[++nStartIdx]
+    --movedFromFront
   }
 
   // List tail is the same
@@ -80,23 +83,30 @@ function dift (prev, next, effect, key) {
   }
 
   let created = 0
+  let pivotDest = null
+  let pivotIdx = pStartIdx - movedFromFront
   const keepBase = pStartIdx
   const keep = createBv(pEndIdx - pStartIdx)
 
-  if (nStartIdx <= nEndIdx) {
-    const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1, key)
+  const prevMap = keyMap(prev, pStartIdx, pEndIdx + 1, key)
 
-    for(; nStartIdx <= nEndIdx; nStartItem = next[++nStartIdx]) {
-      const oldIdx = prevMap[key(nStartItem)]
+  for(; nStartIdx <= nEndIdx; nStartItem = next[++nStartIdx]) {
+    const oldIdx = prevMap[key(nStartItem)]
 
-      if (isUndefined(oldIdx)) {
-        effect(CREATE, null, nStartItem, nStartIdx)
-        ++created
-      } else {
-        setBit(keep, oldIdx - keepBase)
-        effect(oldIdx === nStartIdx ? UPDATE : MOVE, prev[oldIdx], nStartItem, nStartIdx)
-      }
+    if (isUndefined(oldIdx)) {
+      effect(CREATE, null, nStartItem, pivotIdx++)
+      ++created
+    } else if (pStartIdx !== oldIdx) {
+      setBit(keep, oldIdx - keepBase)
+      effect(MOVE, prev[oldIdx], nStartItem, pivotIdx++)
+    } else {
+      pivotDest = nStartIdx
     }
+  }
+
+  if (pivotDest !== null) {
+    setBit(keep, 0)
+    effect(MOVE, prev[pStartIdx], next[pivotDest], pivotDest)
   }
 
   // If there are no creations, then you have to
