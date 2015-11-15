@@ -43,7 +43,7 @@ function dift (prev, next, effect, key) {
 
   // Reversed
   while (pStartIdx <= pEndIdx && nStartIdx <= nEndIdx && equal(pStartItem, nEndItem)) {
-    effect(MOVE, pStartItem, nEndItem, pEndIdx - movedFromFront)
+    effect(MOVE, pStartItem, nEndItem, (pEndIdx - movedFromFront) + 1)
     pStartItem = prev[++pStartIdx]
     nEndItem = next[--nEndIdx]
     ++movedFromFront

@@ -302,8 +302,9 @@ function remove (list, item) {
 }
 
 function move(list, idx, item) {
-  remove(list, item)
+  const oldIdx = indexOf(list, item)
   insertAt(list, idx, item)
+  list.splice(oldIdx < idx ? oldIdx : oldIdx + 1, 1)
 }
 
 function patch(list, pItem, nItem) {
