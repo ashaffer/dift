@@ -52,6 +52,10 @@ function diffChildren (prevList, nextList, node) {
 }
 ```
 
+## Correctness
+
+List diff is extremely tricky to implement correctly.  There are a lot of subtle edge cases and many of them are hard to think of a priori.  To deal with this, dift has not just extensive tests but *exhaustive* tests.  dift's tests explore the entire state space of roughly 8-10 item lists and ensure that the operations generated correctly produce the desired output.
+
 ## License
 
 The MIT License
