@@ -5,6 +5,7 @@
   "version": "0.1.9",
   "license": "MIT",
   "main": "lib/index.js",
+  "jsnext:main": "src/index.js",
   "scripts": {
     "prepublish": "rm -rf lib && babel src --out-dir lib",
     "postpublish": "rm -rf lib"
