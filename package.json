@@ -2,7 +2,7 @@
   "name": "dift",
   "description": "Super fast list diff algorithm",
   "repository": "git://github.com/ashaffer/dift.git",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "license": "MIT",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
